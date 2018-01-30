@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ftp="http://www.mulesoft.org/schema/mule/ee/ftp" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/ftp http://www.mulesoft.org/schema/mule/ee/ftp/current/mule-ftp-ee.xsd">
+    <ftp:connector name="FTP" pollingFrequency="1000" validateConnections="true" moveToDirectory="D:\AnypointStudio\AnypointStudio\ftpconnector\processer" moveToPattern="#[message.inboundProperties.originalFilename+&quot;&quot;+java.util.UUID.randomUUID()+&quot;.xml&quot;]" doc:name="FTP"/>
+    <flow name="ftpconnectorFlow">
+        <ftp:inbound-endpoint host="localhost" port="21" path="/input" user="admin" passive="true" connector-ref="FTP" responseTimeout="10000" doc:name="FTP"/>
+        <byte-array-to-string-transformer doc:name="Byte Array to String"/>
+        <logger message="Filedata:#[payload]" level="INFO" doc:name="Logger"/>
+        <ftp:outbound-endpoint host="localhost" port="21" path="/output" user="admin" passive="true" responseTimeout="10000" doc:name="FTP"/>
+    </flow>
+</mule>
